@@ -80,7 +80,7 @@ class Crawler
         ],
     ];
 
-    public static function create(array $clientOptions = []): Crawler
+    public static function create(array $crawlerOptions = [], array $clientOptions = []): Crawler
     {
         $clientOptions = (count($clientOptions))
             ? $clientOptions
@@ -88,7 +88,58 @@ class Crawler
 
         $client = new Client($clientOptions);
 
-        return new static($client);
+        $crawler = new static($client);
+
+        // Set the various options on the crawler
+        if (is_array($crawlerOptions)) {
+            if (isset($crawlerOptions['concurrency'])) {
+                $crawler->setConcurrency($crawlerOptions['concurrency']);
+            }
+            if (isset($crawlerOptions['maximumResponseSizeInBytes'])) {
+                $crawler->setMaximumResponseSize($crawlerOptions['maximumResponseSizeInBytes']);
+            }
+            if (isset($crawlerOptions['totalCrawlLimit'])) {
+                $crawler->setTotalCrawlLimit($crawlerOptions['totalCrawlLimit']);
+            }
+            if (isset($crawlerOptions['currentCrawlLimit'])) {
+                $crawler->setCurrentCrawlLimit($crawlerOptions['currentCrawlLimit']);
+            }
+            if (isset($crawlerOptions['maximumDepth'])) {
+                $crawler->setMaximumDepth($crawlerOptions['maximumDepth']);
+            }
+            if (isset($crawlerOptions['delay'])) {
+                $crawler->setDelayBetweenRequests($crawlerOptions['delay']);
+            }
+            if (isset($crawlerOptions['types'])) {
+                $crawler->setParseableMimeTypes($crawlerOptions['types']);
+            }
+            if (isset($crawlerOptions['crawlQueue'])) {
+                $crawler->setCrawlQueue($crawlerOptions['crawlQueue']);
+            }
+            if (isset($crawlerOptions['crawlObserver'])) {
+                $crawlerOptions['crawlObservers'] = [$crawlObservers];
+            }
+            if (isset($crawlerOptions['crawlObservers'])) {
+                $crawler->setCrawlObservers($crawlerOptions['crawlObservers']);
+            }
+            if (isset($crawlerOptions['crawlProfile'])) {
+                $crawler->setCrawlProfile($crawlerOptions['crawlProfile']);
+            }
+            if (isset($crawlerOptions['crawlRequestFulfilledClass'])) {
+                $crawler->setCrawlFulfilledHandlerClass($crawlerOptions['crawlRequestFulfilledClass']);
+            }
+            if (isset($crawlerOptions['crawlRequestFailedClass'])) {
+                $crawler->setCrawlFailedHandlerClass($crawlerOptions['crawlRequestFailedClass']);
+            }
+            if (isset($crawlerOptions['browsershot'])) {
+                $crawler->setBrowsershot($crawlerOptions['browsershot']);
+            }
+            if (isset($crawlerOptions['userAgent'])) {
+                $crawler->setUserAgent($crawlerOptions['userAgent']);
+            }
+        }
+
+        return $crawler;
     }
 
     public function __construct(Client $client, int $concurrency = 10)
