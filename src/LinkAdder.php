@@ -56,7 +56,7 @@ class LinkAdder
     {
         $domCrawler = new DomCrawler($html, $foundOnUrl);
 
-        return collect($domCrawler->filterXpath('//a | //link[@rel="next" or @rel="prev"]')->links())
+        return collect($domCrawler->filterXpath('//a | //link[@rel="next" or @rel="prev" or @rel="canonical"]')->links())
             ->reject(function (Link $link) {
                 if ($this->isInvalidHrefNode($link)) {
                     return true;
